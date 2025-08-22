@@ -15,6 +15,7 @@ class LandingPage extends StatelessWidget {
                 _buildHeroSection(context),
                 _buildScreenshotsSection(),
                 _buildFeaturesSection(),
+                _buildTeamSection(),
                 _buildHowItWorksSection(),
                 _buildCTASection(context),
                 _buildFooter(),
@@ -340,6 +341,116 @@ class LandingPage extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTeamSection() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+      color: Colors.grey.shade50,
+      child: Column(
+        children: [
+          const Text(
+            'Who are we?',
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Meet the talented team behind BuddyCount',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 60),
+          Row(
+            children: [
+              Expanded(
+                child: _buildTeamMemberCard(
+                  name: 'Sergey Komarov',
+                  role: 'Frontend Developer',
+                  icon: Icons.code,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(width: 24),
+              Expanded(
+                child: _buildTeamMemberCard(
+                  name: 'Arthur Jacobs',
+                  role: 'Backend Developer',
+                  icon: Icons.storage,
+                  color: Colors.green,
+                ),
+              ),
+              const SizedBox(width: 24),
+              Expanded(
+                child: _buildTeamMemberCard(
+                  name: 'Aude Laydu',
+                  role: 'Lead Designer',
+                  icon: Icons.design_services,
+                  color: Colors.purple,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTeamMemberCard({
+    required String name,
+    required String role,
+    required IconData icon,
+    required Color color,
+  }) {
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 40,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              name,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              role,
+              style: TextStyle(
+                fontSize: 16,
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
