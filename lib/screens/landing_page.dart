@@ -43,7 +43,7 @@ class LandingPage extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              'TEST',
+              'BuddyCount',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
