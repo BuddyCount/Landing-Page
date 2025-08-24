@@ -1,12 +1,38 @@
 import 'package:flutter/material.dart';
 
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
+
+  @override
+  State<LandingPage> createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToSection(int sectionIndex) {
+    // Calculate approximate position for each section
+    final sectionPositions = [0, 600, 1200, 1800, 2400, 3000];
+    if (sectionIndex < sectionPositions.length) {
+      _scrollController.animateTo(
+        sectionPositions[sectionIndex].toDouble(),
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           _buildAppBar(context),
           SliverToBoxAdapter(
@@ -61,7 +87,7 @@ class LandingPage extends StatelessWidget {
             // For now, just show a placeholder
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Coming Soon! This will link to your app.'),
+                content: Text('Coming Soon!'),
                 duration: Duration(seconds: 2),
               ),
             );
@@ -170,7 +196,8 @@ class LandingPage extends StatelessWidget {
               const SizedBox(width: 20),
               OutlinedButton(
                 onPressed: () {
-                  // Scroll to features section
+                  // Scroll to features section (Why Choose BuddyCount?)
+                  _scrollToSection(2);
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
