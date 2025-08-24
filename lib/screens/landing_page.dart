@@ -624,7 +624,7 @@ class _LandingPageState extends State<LandingPage> {
                   description: 'Start by creating a group and adding your friends or roommates.',
                 ),
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 16),
               Expanded(
                 child: _buildStepCard(
                   number: '2',
@@ -632,12 +632,20 @@ class _LandingPageState extends State<LandingPage> {
                   description: 'Record shared expenses like rent, groceries, or dinner bills.',
                 ),
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 16),
               Expanded(
                 child: _buildStepCard(
                   number: '3',
                   title: 'Track Balances',
                   description: 'See who owes what and settle up easily with automatic calculations.',
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildStepCard(
+                  number: '4',
+                  title: 'Keep Track of Your Spending Tendencies',
+                  description: 'Estimate your future spendings with our spendings prediction feature.',
                 ),
               ),
             ],
