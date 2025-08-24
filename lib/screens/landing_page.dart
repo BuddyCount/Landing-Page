@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -445,20 +446,29 @@ class _LandingPageState extends State<LandingPage> {
       elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           // Open GitHub profile in new tab
-          // Note: For web, this will open in the same tab
-          // For mobile apps, you'd use url_launcher package
           if (githubUrl.isNotEmpty) {
-            // For web deployment, this will work
-            // For mobile, you'd need to add url_launcher package
-            // and use: launchUrl(Uri.parse(githubUrl));
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Opening ${name}\'s GitHub profile...'),
-                duration: const Duration(seconds: 2),
-              ),
-            );
+            try {
+              final Uri url = Uri.parse(githubUrl);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Could not open ${name}\'s GitHub profile'),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error opening ${name}\'s GitHub profile'),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            }
           }
         },
         borderRadius: BorderRadius.circular(16),
