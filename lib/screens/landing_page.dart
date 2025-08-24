@@ -172,7 +172,7 @@ class _LandingPageState extends State<LandingPage> {
                   // This would link to your actual app when deployed
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Coming Soon! This will link to your app.'),
+                      content: Text('Coming Soon!'),
                       duration: Duration(seconds: 2),
                     ),
                   );
@@ -670,7 +670,7 @@ class _LandingPageState extends State<LandingPage> {
               // This would link to your actual app when deployed
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Coming Soon! This will link to your app.'),
+                  content: Text('Coming Soon! '),
                   duration: Duration(seconds: 2),
                 ),
               );
