@@ -238,7 +238,7 @@ class _LandingPageState extends State<LandingPage> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Beautiful, intuitive interface designed for effortless expense tracking',
+            'Simple, yet intuitive interface designed for effortless expense tracking',
             style: TextStyle(
               fontSize: 18,
               color: Colors.grey.shade600,
@@ -252,7 +252,7 @@ class _LandingPageState extends State<LandingPage> {
                 child: _buildScreenshotCard(
                   'assets/screenshots/no_expense.png',
                   'Clean Dashboard',
-                  'Start with a clean, organized view of your group',
+                  'Start with a clean, organized view of your groups',
                 ),
               ),
               const SizedBox(width: 24),
@@ -352,7 +352,7 @@ class _LandingPageState extends State<LandingPage> {
                 child: _buildFeatureCard(
                   icon: Icons.receipt_long,
                   title: 'Expense Tracking',
-                  description: 'Easily add expenses with names, amounts, currencies, and split them between members.',
+                  description: 'Easily add expenses with names, amounts, currencies, and split them between members. Keep track of spendings with our smart previews.',
                   screenshot: 'assets/screenshots/expense_fill.png',
                 ),
               ),
@@ -404,6 +404,7 @@ class _LandingPageState extends State<LandingPage> {
                   role: 'Frontend Developer',
                   icon: Icons.code,
                   color: Colors.blue,
+                  githubUrl: 'https://github.com/shadyseko',
                 ),
               ),
               const SizedBox(width: 24),
@@ -413,6 +414,7 @@ class _LandingPageState extends State<LandingPage> {
                   role: 'Backend Developer',
                   icon: Icons.storage,
                   color: Colors.green,
+                  githubUrl: 'https://github.com/arthur2479',
                 ),
               ),
               const SizedBox(width: 24),
@@ -422,6 +424,7 @@ class _LandingPageState extends State<LandingPage> {
                   role: 'Lead Designer',
                   icon: Icons.design_services,
                   color: Colors.purple,
+                  githubUrl: 'https://github.com/eau2',
                 ),
               ),
             ],
@@ -436,47 +439,87 @@ class _LandingPageState extends State<LandingPage> {
     required String role,
     required IconData icon,
     required Color color,
+    required String githubUrl,
   }) {
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                shape: BoxShape.circle,
+      child: InkWell(
+        onTap: () {
+          // Open GitHub profile in new tab
+          // Note: For web, this will open in the same tab
+          // For mobile apps, you'd use url_launcher package
+          if (githubUrl.isNotEmpty) {
+            // For web deployment, this will work
+            // For mobile, you'd need to add url_launcher package
+            // and use: launchUrl(Uri.parse(githubUrl));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Opening ${name}\'s GitHub profile...'),
+                duration: const Duration(seconds: 2),
               ),
-              child: Icon(
-                icon,
-                size: 40,
-                color: color,
+            );
+          }
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  size: 40,
+                  color: color,
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              name,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+              const SizedBox(height: 24),
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              role,
-              style: TextStyle(
-                fontSize: 16,
-                color: color,
-                fontWeight: FontWeight.w600,
+              const SizedBox(height: 8),
+              Text(
+                role,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.link,
+                    size: 16,
+                    color: Colors.grey.shade600,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'GitHub Profile',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
