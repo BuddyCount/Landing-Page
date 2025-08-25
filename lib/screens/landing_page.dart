@@ -107,8 +107,14 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildHeroSection(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 768;
+    
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 24, 
+        vertical: isMobile ? 60 : 80
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -121,28 +127,28 @@ class _LandingPageState extends State<LandingPage> {
       ),
       child: Column(
         children: [
-          const SizedBox(height: 40),
+          SizedBox(height: isMobile ? 20 : 40),
           Text(
             'Split Expenses\nWith Friends',
             style: TextStyle(
-              fontSize: 48,
+              fontSize: isMobile ? 32 : 48,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.onPrimary,
               height: 1.1,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: isMobile ? 16 : 24),
           Text(
             'The easiest way to track shared expenses and balances with friends, roommates, and groups.',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: isMobile ? 16 : 20,
               color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: isMobile ? 30 : 40),
           // Hero Screenshot
           Container(
             decoration: BoxDecoration(
@@ -159,123 +165,207 @@ class _LandingPageState extends State<LandingPage> {
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
                 'assets/screenshots/completed_expense.png',
-                height: 400,
+                height: isMobile ? 250 : 400,
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          const SizedBox(height: 40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // This would link to your actual app when deployed
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Coming Soon!'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                  foregroundColor: Theme.of(context).colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text(
+          SizedBox(height: isMobile ? 30 : 40),
+          // Responsive button layout
+          if (isMobile) ...[
+            // Mobile: Stacked buttons
+            Column(
+              children: [
+                _buildHeroButton(
+                  context,
                   'Get Started',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Coming Soon!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  isPrimary: true,
                 ),
-              ),
-              const SizedBox(width: 20),
-              OutlinedButton(
-                onPressed: () {
-                  // Scroll to features section (Why Choose BuddyCount?)
-                  _scrollToSection(2);
-                },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  side: BorderSide(color: Theme.of(context).colorScheme.onPrimary),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text(
+                const SizedBox(height: 16),
+                _buildHeroButton(
+                  context,
                   'Learn More',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  () => _scrollToSection(2),
+                  isPrimary: false,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 60),
+              ],
+            ),
+          ] else ...[
+            // Desktop: Side by side buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildHeroButton(
+                  context,
+                  'Get Started',
+                  () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Coming Soon!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  isPrimary: true,
+                ),
+                const SizedBox(width: 20),
+                _buildHeroButton(
+                  context,
+                  'Learn More',
+                  () => _scrollToSection(2),
+                  isPrimary: false,
+                ),
+              ],
+            ),
+          ],
+          SizedBox(height: isMobile ? 40 : 60),
         ],
       ),
     );
   }
 
+  Widget _buildHeroButton(
+    BuildContext context,
+    String text,
+    VoidCallback onPressed, {
+    required bool isPrimary,
+  }) {
+    if (isPrimary) {
+      return ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+          foregroundColor: Theme.of(context).colorScheme.primary,
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    } else {
+      return OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          side: BorderSide(color: Theme.of(context).colorScheme.onPrimary),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      );
+    }
+  }
+
   Widget _buildScreenshotsSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      child: Column(
-        children: [
-          const Text(
-            'See BuddyCount in Action',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 768;
+        
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16 : 24, 
+            vertical: isMobile ? 60 : 80
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Simple, yet intuitive interface designed for effortless expense tracking',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey.shade600,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 60),
-          Row(
+          child: Column(
             children: [
-              Expanded(
-                child: _buildScreenshotCard(
-                  'assets/screenshots/no_expense.png',
-                  'Clean Dashboard',
-                  'Start with a clean, organized view of your groups',
+              Text(
+                'See BuddyCount in Action',
+                style: TextStyle(
+                  fontSize: isMobile ? 28 : 36,
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: _buildScreenshotCard(
-                  'assets/screenshots/expense_fill.png',
-                  'Easy Expense Entry',
-                  'Add expenses quickly with our intuitive form',
+              SizedBox(height: isMobile ? 16 : 24),
+              Text(
+                'Simple, yet intuitive interface designed for effortless expense tracking',
+                style: TextStyle(
+                  fontSize: isMobile ? 16 : 18,
+                  color: Colors.grey.shade600,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: _buildScreenshotCard(
-                  'assets/screenshots/completed_expense.png',
-                  'Track Everything',
-                  'See all expenses and balances at a glance',
+              SizedBox(height: isMobile ? 40 : 60),
+              if (isMobile) ...[
+                // Mobile: Stacked cards
+                Column(
+                  children: [
+                    _buildScreenshotCard(
+                      'assets/screenshots/no_expense.png',
+                      'Clean Dashboard',
+                      'Start with a clean, organized view of your groups',
+                    ),
+                    const SizedBox(height: 24),
+                    _buildScreenshotCard(
+                      'assets/screenshots/expense_fill.png',
+                      'Easy Expense Entry',
+                      'Add expenses quickly with our intuitive form',
+                    ),
+                    const SizedBox(height: 24),
+                    _buildScreenshotCard(
+                      'assets/screenshots/completed_expense.png',
+                      'Track Everything',
+                      'See all expenses and balances at a glance',
+                    ),
+                  ],
                 ),
-              ),
+              ] else ...[
+                // Desktop: Side by side cards
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildScreenshotCard(
+                        'assets/screenshots/no_expense.png',
+                        'Clean Dashboard',
+                        'Start with a clean, organized view of your groups',
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: _buildScreenshotCard(
+                        'assets/screenshots/expense_fill.png',
+                        'Easy Expense Entry',
+                        'Add expenses quickly with our intuitive form',
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: _buildScreenshotCard(
+                        'assets/screenshots/completed_expense.png',
+                        'Track Everything',
+                        'See all expenses and balances at a glance',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -325,113 +415,192 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildFeaturesSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      child: Column(
-        children: [
-          const Text(
-            'Why Choose BuddyCount?',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 768;
+        
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16 : 24, 
+            vertical: isMobile ? 60 : 80
           ),
-          const SizedBox(height: 60),
-          Row(
+          child: Column(
             children: [
-              Expanded(
-                child: _buildFeatureCard(
-                  icon: Icons.group,
-                  title: 'Group Management',
-                  description: 'Create and manage expense groups with friends, roommates, or travel companions.',
-                  screenshot: 'assets/screenshots/no_expense.png',
+              Text(
+                'Why Choose BuddyCount?',
+                style: TextStyle(
+                  fontSize: isMobile ? 28 : 36,
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: _buildFeatureCard(
-                  icon: Icons.receipt_long,
-                  title: 'Expense Tracking',
-                  description: 'Easily add expenses with names, amounts, currencies, and split them between members. Keep track of spendings with our smart previews.',
-                  screenshot: 'assets/screenshots/expense_fill.png',
+              SizedBox(height: isMobile ? 40 : 60),
+              if (isMobile) ...[
+                // Mobile: Stacked cards
+                Column(
+                  children: [
+                    _buildFeatureCard(
+                      icon: Icons.group,
+                      title: 'Group Management',
+                      description: 'Create and manage expense groups with friends, roommates, or travel companions.',
+                      screenshot: 'assets/screenshots/no_expense.png',
+                    ),
+                    const SizedBox(height: 24),
+                    _buildFeatureCard(
+                      icon: Icons.receipt_long,
+                      title: 'Expense Tracking',
+                      description: 'Easily add expenses with names, amounts, currencies, and split them between members. Keep track of spendings with our smart previews.',
+                      screenshot: 'assets/screenshots/expense_fill.png',
+                    ),
+                    const SizedBox(height: 24),
+                    _buildFeatureCard(
+                      icon: Icons.account_balance,
+                      title: 'Smart Balances',
+                      description: 'Automatic calculation of who owes what to whom, keeping everyone in sync.',
+                      screenshot: 'assets/screenshots/completed_expense.png',
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: _buildFeatureCard(
-                  icon: Icons.account_balance,
-                  title: 'Smart Balances',
-                  description: 'Automatic calculation of who owes what to whom, keeping everyone in sync.',
-                  screenshot: 'assets/screenshots/completed_expense.png',
+              ] else ...[
+                // Desktop: Side by side cards
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildFeatureCard(
+                        icon: Icons.group,
+                        title: 'Group Management',
+                        description: 'Create and manage expense groups with friends, roommates, or travel companions.',
+                        screenshot: 'assets/screenshots/no_expense.png',
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: _buildFeatureCard(
+                        icon: Icons.receipt_long,
+                        title: 'Expense Tracking',
+                        description: 'Easily add expenses with names, amounts, currencies, and split them between members. Keep track of spendings with our smart previews.',
+                        screenshot: 'assets/screenshots/expense_fill.png',
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: _buildFeatureCard(
+                        icon: Icons.account_balance,
+                        title: 'Smart Balances',
+                        description: 'Automatic calculation of who owes what to whom, keeping everyone in sync.',
+                        screenshot: 'assets/screenshots/completed_expense.png',
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              ],
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _buildTeamSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      color: Colors.grey.shade50,
-      child: Column(
-        children: [
-          const Text(
-            'Who are we?',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 768;
+        
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16 : 24, 
+            vertical: isMobile ? 60 : 80
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Meet the talented team behind BuddyCount',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey.shade600,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 60),
-          Row(
+          color: Colors.grey.shade50,
+          child: Column(
             children: [
-              Expanded(
-                child: _buildTeamMemberCard(
-                  name: 'Sergey Komarov',
-                  role: 'Frontend Developer',
-                  icon: Icons.code,
-                  color: Colors.blue,
-                  githubUrl: 'https://github.com/shadyseko',
+              Text(
+                'Who are we?',
+                style: TextStyle(
+                  fontSize: isMobile ? 28 : 36,
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: _buildTeamMemberCard(
-                  name: 'Arthur Jacobs',
-                  role: 'Backend Developer',
-                  icon: Icons.storage,
-                  color: Colors.green,
-                  githubUrl: 'https://github.com/arthur2479',
+              SizedBox(height: isMobile ? 16 : 24),
+              Text(
+                'Meet the talented team behind BuddyCount',
+                style: TextStyle(
+                  fontSize: isMobile ? 16 : 18,
+                  color: Colors.grey.shade600,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: _buildTeamMemberCard(
-                  name: 'Aude Laydu',
-                  role: 'Lead Designer',
-                  icon: Icons.design_services,
-                  color: Colors.purple,
-                  githubUrl: 'https://github.com/eau2',
+              SizedBox(height: isMobile ? 40 : 60),
+              if (isMobile) ...[
+                // Mobile: Stacked cards
+                Column(
+                  children: [
+                    _buildTeamMemberCard(
+                      name: 'Sergey Komarov',
+                      role: 'Frontend Developer',
+                      icon: Icons.code,
+                      color: Colors.blue,
+                      githubUrl: 'https://github.com/shadyseko',
+                    ),
+                    const SizedBox(height: 24),
+                    _buildTeamMemberCard(
+                      name: 'Arthur Jacobs',
+                      role: 'Backend Developer',
+                      icon: Icons.storage,
+                      color: Colors.green,
+                      githubUrl: 'https://github.com/arthur2479',
+                    ),
+                    const SizedBox(height: 24),
+                    _buildTeamMemberCard(
+                      name: 'Aude Laydu',
+                      role: 'Lead Designer',
+                      icon: Icons.design_services,
+                      color: Colors.purple,
+                      githubUrl: 'https://github.com/eau2',
+                    ),
+                  ],
                 ),
-              ),
+              ] else ...[
+                // Desktop: Side by side cards
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTeamMemberCard(
+                        name: 'Sergey Komarov',
+                        role: 'Frontend Developer',
+                        icon: Icons.code,
+                        color: Colors.blue,
+                        githubUrl: 'https://github.com/shadyseko',
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: _buildTeamMemberCard(
+                        name: 'Arthur Jacobs',
+                        role: 'Backend Developer',
+                        icon: Icons.storage,
+                        color: Colors.green,
+                        githubUrl: 'https://github.com/arthur2479',
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(
+                      child: _buildTeamMemberCard(
+                        name: 'Aude Laydu',
+                        role: 'Lead Designer',
+                        icon: Icons.design_services,
+                        color: Colors.purple,
+                        githubUrl: 'https://github.com/eau2',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -601,57 +770,98 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildHowItWorksSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
-      color: Colors.grey.shade50,
-      child: Column(
-        children: [
-          const Text(
-            'How It Works',
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 768;
+        
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16 : 24, 
+            vertical: isMobile ? 60 : 80
           ),
-          const SizedBox(height: 60),
-          Row(
+          color: Colors.grey.shade50,
+          child: Column(
             children: [
-              Expanded(
-                child: _buildStepCard(
-                  number: '1',
-                  title: 'Create a Group',
-                  description: 'Start by creating a group and adding your friends or roommates.',
+              Text(
+                'How It Works',
+                style: TextStyle(
+                  fontSize: isMobile ? 28 : 36,
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildStepCard(
-                  number: '2',
-                  title: 'Add Expenses',
-                  description: 'Record shared expenses like rent, groceries, or dinner bills.',
+              SizedBox(height: isMobile ? 40 : 60),
+              if (isMobile) ...[
+                // Mobile: Stacked cards
+                Column(
+                  children: [
+                    _buildStepCard(
+                      number: '1',
+                      title: 'Create a Group',
+                      description: 'Start by creating a group and adding your friends or roommates.',
+                    ),
+                    const SizedBox(height: 32),
+                    _buildStepCard(
+                      number: '2',
+                      title: 'Add Expenses',
+                      description: 'Record shared expenses like rent, groceries, or dinner bills.',
+                    ),
+                    const SizedBox(height: 32),
+                    _buildStepCard(
+                      number: '3',
+                      title: 'Track Balances',
+                      description: 'See who owes what and settle up easily with automatic calculations.',
+                    ),
+                    const SizedBox(height: 32),
+                    _buildStepCard(
+                      number: '4',
+                      title: 'Keep Track of Your Spending Tendencies',
+                      description: 'Estimate your future spendings with our spendings prediction feature.',
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildStepCard(
-                  number: '3',
-                  title: 'Track Balances',
-                  description: 'See who owes what and settle up easily with automatic calculations.',
+              ] else ...[
+                // Desktop: Side by side cards
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildStepCard(
+                        number: '1',
+                        title: 'Create a Group',
+                        description: 'Start by creating a group and adding your friends or roommates.',
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildStepCard(
+                        number: '2',
+                        title: 'Add Expenses',
+                        description: 'Record shared expenses like rent, groceries, or dinner bills.',
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildStepCard(
+                        number: '3',
+                        title: 'Track Balances',
+                        description: 'See who owes what and settle up easily with automatic calculations.',
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildStepCard(
+                        number: '4',
+                        title: 'Keep Track of Your Spending Tendencies',
+                        description: 'Estimate your future spendings with our spendings prediction feature.',
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildStepCard(
-                  number: '4',
-                  title: 'Keep Track of Your Spending Tendencies',
-                  description: 'Estimate your future spendings with our spendings prediction feature.',
-                ),
-              ),
+              ],
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
