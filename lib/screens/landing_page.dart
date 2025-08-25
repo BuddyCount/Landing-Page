@@ -129,7 +129,7 @@ class _LandingPageState extends State<LandingPage> {
         children: [
           SizedBox(height: isMobile ? 20 : 40),
           Text(
-            'Split Expenses\nWith Friends',
+            'Test, Hello World !',
             style: TextStyle(
               fontSize: isMobile ? 32 : 48,
               fontWeight: FontWeight.bold,
