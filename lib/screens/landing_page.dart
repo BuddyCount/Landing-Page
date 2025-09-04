@@ -129,7 +129,7 @@ class _LandingPageState extends State<LandingPage> {
         children: [
           SizedBox(height: isMobile ? 20 : 40),
           Text(
-            'Test, Hello World !',
+            'BuddyCount',
             style: TextStyle(
               fontSize: isMobile ? 32 : 48,
               fontWeight: FontWeight.bold,
