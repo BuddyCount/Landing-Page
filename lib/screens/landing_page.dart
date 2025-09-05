@@ -317,24 +317,28 @@ class _LandingPageState extends State<LandingPage> {
                       'assets/screenshots/no_expense.png',
                       'Clean Dashboard',
                       'Start with a clean, organized view of your groups',
+                      height: 350,
                     ),
                     const SizedBox(height: 24),
                     _buildScreenshotCard(
                       'assets/screenshots/expense_fill.png',
                       'Easy Expense Entry',
                       'Add expenses quickly with our intuitive form',
+                      height: 350,
                     ),
                     const SizedBox(height: 24),
                     _buildScreenshotCard(
                       'assets/screenshots/completed_expense.png',
                       'Track Everything',
                       'See all expenses and balances at a glance',
+                      height: 350,
                     ),
                     const SizedBox(height: 24),
                     _buildScreenshotCard(
                       'assets/screenshots/prediction.png',
                       'Smart Predictions',
                       'Get AI-powered insights into your future spending patterns',
+                      height: 350,
                     ),
                   ],
                 ),
@@ -349,6 +353,7 @@ class _LandingPageState extends State<LandingPage> {
                             'assets/screenshots/no_expense.png',
                             'Clean Dashboard',
                             'Start with a clean, organized view of your groups',
+                            height: 450,
                           ),
                         ),
                         const SizedBox(width: 24),
@@ -357,6 +362,7 @@ class _LandingPageState extends State<LandingPage> {
                             'assets/screenshots/expense_fill.png',
                             'Easy Expense Entry',
                             'Add expenses quickly with our intuitive form',
+                            height: 450,
                           ),
                         ),
                       ],
@@ -369,6 +375,7 @@ class _LandingPageState extends State<LandingPage> {
                             'assets/screenshots/completed_expense.png',
                             'Track Everything',
                             'See all expenses and balances at a glance',
+                            height: 450,
                           ),
                         ),
                         const SizedBox(width: 24),
@@ -377,6 +384,7 @@ class _LandingPageState extends State<LandingPage> {
                             'assets/screenshots/prediction.png',
                             'Smart Predictions',
                             'Get AI-powered insights into your future spending patterns',
+                            height: 450,
                           ),
                         ),
                       ],
@@ -391,7 +399,7 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildScreenshotCard(String imagePath, String title, String description) {
+  Widget _buildScreenshotCard(String imagePath, String title, String description, {double? height}) {
     return Card(
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -402,7 +410,7 @@ class _LandingPageState extends State<LandingPage> {
             child: Image.asset(
               imagePath,
               width: double.infinity,
-              height: 300,
+              height: height ?? 300,
               fit: BoxFit.cover,
             ),
           ),
