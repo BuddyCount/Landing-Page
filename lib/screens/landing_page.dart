@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:html' as html;
+import 'dart:ui_web' as ui_web;
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -10,6 +13,30 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      _registerYouTubeIframe();
+    }
+  }
+
+  void _registerYouTubeIframe() {
+    // Register the iframe element for web
+    ui_web.platformViewRegistry.registerViewFactory(
+      'youtube-iframe',
+      (int viewId) {
+        final iframe = html.IFrameElement()
+          ..src = 'https://www.youtube.com/embed/XsQE-BCzkJg?rel=0&modestbranding=1&showinfo=0'
+          ..style.border = 'none'
+          ..style.width = '100%'
+          ..style.height = '100%'
+          ..allowFullscreen = true;
+        return iframe;
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -40,6 +67,7 @@ class _LandingPageState extends State<LandingPage> {
             child: Column(
               children: [
                 _buildHeroSection(context),
+                _buildSeeUsInActionSection(),
                 _buildScreenshotsSection(),
                 _buildFeaturesSection(),
                 _buildTeamSection(),
@@ -279,6 +307,154 @@ class _LandingPageState extends State<LandingPage> {
     }
   }
 
+  Widget _buildSeeUsInActionSection() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 768;
+        
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 16 : 24, 
+            vertical: isMobile ? 60 : 80
+          ),
+          child: Column(
+            children: [
+              Text(
+                'See Us in Action',
+                style: TextStyle(
+                  fontSize: isMobile ? 28 : 36,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: isMobile ? 16 : 24),
+              Text(
+                'Watch how easy it is to track shared expenses with BuddyCount',
+                style: TextStyle(
+                  fontSize: isMobile ? 16 : 18,
+                  color: Colors.grey.shade600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: isMobile ? 40 : 60),
+              Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  maxWidth: isMobile ? double.infinity : 800,
+                ),
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: _buildYouTubePlayer(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildYouTubePlayer() {
+    if (kIsWeb) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: HtmlElementView(
+            viewType: 'youtube-iframe',
+          ),
+        ),
+      );
+    } else {
+      // For mobile platforms, show a clickable thumbnail that opens YouTube
+      return GestureDetector(
+        onTap: () async {
+          final url = Uri.parse('https://youtu.be/XsQE-BCzkJg');
+          if (await canLaunchUrl(url)) {
+            await launchUrl(url, mode: LaunchMode.externalApplication);
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.red.shade600,
+                Colors.red.shade800,
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.black.withOpacity(0.3),
+                ),
+              ),
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.play_arrow,
+                    size: 60,
+                    color: Colors.red.shade600,
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade600,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Text(
+                    'YouTube',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
   Widget _buildScreenshotsSection() {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -470,24 +646,21 @@ class _LandingPageState extends State<LandingPage> {
                 Column(
                   children: [
                     _buildFeatureCard(
-                      icon: Icons.group,
-                      title: 'Group Management',
-                      description: 'Create and manage expense groups with friends, roommates, or travel companions.',
-                      screenshot: 'assets/screenshots/no_expense.png',
+                      icon: Icons.person_off,
+                      title: 'Accountless',
+                      description: 'No need to create an account or share personal information. Start tracking expenses immediately with just a group link.',
                     ),
                     const SizedBox(height: 24),
                     _buildFeatureCard(
-                      icon: Icons.receipt_long,
-                      title: 'Expense Tracking',
-                      description: 'Easily add expenses with names, amounts, currencies, and split them between members. Keep track of spendings with our smart previews.',
-                      screenshot: 'assets/screenshots/expense_fill.png',
+                      icon: Icons.code,
+                      title: 'Free and Open Source',
+                      description: 'Completely free to use with full source code available. Transparent, customizable, and community-driven development.',
                     ),
                     const SizedBox(height: 24),
                     _buildFeatureCard(
-                      icon: Icons.account_balance,
-                      title: 'Smart Balances',
-                      description: 'Automatic calculation of who owes what to whom, keeping everyone in sync.',
-                      screenshot: 'assets/screenshots/completed_expense.png',
+                      icon: Icons.touch_app,
+                      title: 'Easy to Use',
+                      description: 'Intuitive interface designed for simplicity. Add expenses, split bills, and track balances with just a few taps.',
                     ),
                   ],
                 ),
@@ -497,28 +670,25 @@ class _LandingPageState extends State<LandingPage> {
                   children: [
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.group,
-                        title: 'Group Management',
-                        description: 'Create and manage expense groups with friends, roommates, or travel companions.',
-                        screenshot: 'assets/screenshots/no_expense.png',
+                        icon: Icons.person_off,
+                        title: 'Accountless',
+                        description: 'No need to create an account or share personal information. Start tracking expenses immediately with just a group link.',
                       ),
                     ),
                     const SizedBox(width: 24),
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.receipt_long,
-                        title: 'Expense Tracking',
-                        description: 'Easily add expenses with names, amounts, currencies, and split them between members. Keep track of spendings with our smart previews.',
-                        screenshot: 'assets/screenshots/expense_fill.png',
+                        icon: Icons.code,
+                        title: 'Free and Open Source',
+                        description: 'Completely free to use with full source code available. Transparent, customizable, and community-driven development.',
                       ),
                     ),
                     const SizedBox(width: 24),
                     Expanded(
                       child: _buildFeatureCard(
-                        icon: Icons.account_balance,
-                        title: 'Smart Balances',
-                        description: 'Automatic calculation of who owes what to whom, keeping everyone in sync.',
-                        screenshot: 'assets/screenshots/completed_expense.png',
+                        icon: Icons.touch_app,
+                        title: 'Easy to Use',
+                        description: 'Intuitive interface designed for simplicity. Add expenses, split bills, and track balances with just a few taps.',
                       ),
                     ),
                   ],
@@ -738,7 +908,6 @@ class _LandingPageState extends State<LandingPage> {
     required IconData icon,
     required String title,
     required String description,
-    required String screenshot,
   }) {
     return Card(
       elevation: 4,
@@ -747,43 +916,28 @@ class _LandingPageState extends State<LandingPage> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 32,
-                    color: Colors.blue,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                screenshot,
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.cover,
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                icon,
+                size: 48,
+                color: Colors.blue,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
             Text(
               description,
               style: TextStyle(
