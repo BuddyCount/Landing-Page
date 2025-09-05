@@ -600,7 +600,7 @@ class _LandingPageState extends State<LandingPage> {
                     Expanded(
                       child: _buildTeamMemberCard(
                         name: 'Arthur Jacobs',
-                        role: 'Backend Developer',
+                        role: 'Backend Developer, devops',
                         icon: Icons.storage,
                         color: Colors.green,
                         githubUrl: 'https://github.com/arthur2479',
@@ -610,7 +610,7 @@ class _LandingPageState extends State<LandingPage> {
                     Expanded(
                       child: _buildTeamMemberCard(
                         name: 'Aude Laydu',
-                        role: 'Lead Designer',
+                        role: 'Lead Designer, backend developer',
                         icon: Icons.design_services,
                         color: Colors.purple,
                         githubUrl: 'https://github.com/eau2',
