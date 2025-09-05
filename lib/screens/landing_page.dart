@@ -330,34 +330,56 @@ class _LandingPageState extends State<LandingPage> {
                       'Track Everything',
                       'See all expenses and balances at a glance',
                     ),
+                    const SizedBox(height: 24),
+                    _buildScreenshotCard(
+                      'assets/screenshots/prediction.png',
+                      'Smart Predictions',
+                      'Get AI-powered insights into your future spending patterns',
+                    ),
                   ],
                 ),
               ] else ...[
-                // Desktop: Side by side cards
-                Row(
+                // Desktop: 2x2 grid layout
+                Column(
                   children: [
-                    Expanded(
-                      child: _buildScreenshotCard(
-                        'assets/screenshots/no_expense.png',
-                        'Clean Dashboard',
-                        'Start with a clean, organized view of your groups',
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildScreenshotCard(
+                            'assets/screenshots/no_expense.png',
+                            'Clean Dashboard',
+                            'Start with a clean, organized view of your groups',
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          child: _buildScreenshotCard(
+                            'assets/screenshots/expense_fill.png',
+                            'Easy Expense Entry',
+                            'Add expenses quickly with our intuitive form',
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: _buildScreenshotCard(
-                        'assets/screenshots/expense_fill.png',
-                        'Easy Expense Entry',
-                        'Add expenses quickly with our intuitive form',
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: _buildScreenshotCard(
-                        'assets/screenshots/completed_expense.png',
-                        'Track Everything',
-                        'See all expenses and balances at a glance',
-                      ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildScreenshotCard(
+                            'assets/screenshots/completed_expense.png',
+                            'Track Everything',
+                            'See all expenses and balances at a glance',
+                          ),
+                        ),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          child: _buildScreenshotCard(
+                            'assets/screenshots/prediction.png',
+                            'Smart Predictions',
+                            'Get AI-powered insights into your future spending patterns',
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -546,7 +568,7 @@ class _LandingPageState extends State<LandingPage> {
                     const SizedBox(height: 24),
                     _buildTeamMemberCard(
                       name: 'Arthur Jacobs',
-                      role: 'Backend Developer',
+                      role: 'Backend Developer, devops',
                       icon: Icons.storage,
                       color: Colors.green,
                       githubUrl: 'https://github.com/arthur2479',
@@ -554,7 +576,7 @@ class _LandingPageState extends State<LandingPage> {
                     const SizedBox(height: 24),
                     _buildTeamMemberCard(
                       name: 'Aude Laydu',
-                      role: 'Lead Designer',
+                      role: 'Lead Designer and backend developer',
                       icon: Icons.design_services,
                       color: Colors.purple,
                       githubUrl: 'https://github.com/eau2',
@@ -815,8 +837,8 @@ class _LandingPageState extends State<LandingPage> {
                     const SizedBox(height: 32),
                     _buildStepCard(
                       number: '4',
-                      title: 'Keep Track of Your Spending Tendencies',
-                      description: 'Estimate your future spendings with our spendings prediction feature.',
+                      title: 'Smart Spending Predictions',
+                      description: 'Get AI-powered insights into your future spending patterns and plan ahead.',
                     ),
                   ],
                 ),
@@ -851,8 +873,8 @@ class _LandingPageState extends State<LandingPage> {
                     Expanded(
                       child: _buildStepCard(
                         number: '4',
-                        title: 'Keep Track of Your Spending Tendencies',
-                        description: 'Estimate your future spendings with our spendings prediction feature.',
+                        title: 'Smart Spending Predictions',
+                        description: 'Get AI-powered insights into your future spending patterns and plan ahead.',
                       ),
                     ),
                   ],
